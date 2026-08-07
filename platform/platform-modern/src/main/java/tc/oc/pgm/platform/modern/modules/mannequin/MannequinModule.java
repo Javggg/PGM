@@ -1,6 +1,8 @@
 package tc.oc.pgm.platform.modern.modules.mannequin;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -14,7 +16,9 @@ import tc.oc.pgm.api.map.MapModule;
 import tc.oc.pgm.api.map.factory.MapFactory;
 import tc.oc.pgm.api.map.factory.MapModuleFactory;
 import tc.oc.pgm.api.match.Match;
+import tc.oc.pgm.api.match.MatchModule;
 import tc.oc.pgm.api.player.MatchPlayer;
+import tc.oc.pgm.entity.TaggedMobMatchModule;
 import tc.oc.pgm.platform.modern.modules.behavior.BehaviorDefinition;
 import tc.oc.pgm.platform.modern.modules.mannequin.SkinPart.SkinLayers;
 import tc.oc.pgm.platform.modern.modules.waypoint.WaypointDefinition;
@@ -25,6 +29,11 @@ import tc.oc.pgm.util.xml.XMLUtils;
 
 public record MannequinModule(Map<String, MannequinDefinition> mannequinDefinitions)
     implements MapModule<MannequinMatchModule> {
+
+  @Override
+  public Collection<Class<? extends MatchModule>> getHardDependencies() {
+    return ImmutableList.of(TaggedMobMatchModule.class);
+  }
 
   @Override
   public MannequinMatchModule createMatchModule(Match match) {

@@ -18,6 +18,7 @@ import tc.oc.pgm.api.match.Match;
 import tc.oc.pgm.api.match.MatchModule;
 import tc.oc.pgm.api.match.MatchScope;
 import tc.oc.pgm.api.player.MatchPlayer;
+import tc.oc.pgm.entity.TaggedMobMatchModule;
 import tc.oc.pgm.events.ListenerScope;
 import tc.oc.pgm.platform.modern.modules.behavior.BehaviorMatchModule;
 import tc.oc.pgm.platform.modern.modules.waypoint.WaypointDefinition;
@@ -63,9 +64,13 @@ public class MannequinMatchModule implements MatchModule, Listener {
   }
 
   public void despawn(String id) {
+    var tmmm = match.needModule(TaggedMobMatchModule.class);
     var bmm = match.needModule(BehaviorMatchModule.class);
-    instances.removeAll(id).forEach(mannequin -> {
-      byEntity.remove(mannequin.getEntityId());
+
+    tmmm.forEach(id, entity -> {
+      Mannequin mannequin = byEntity.get(entity.getUniqueId());
+      if (mannequin == null) return;
+      tmmm.untrack(entity);
       bmm.unregister(mannequin);
       mannequin.despawn();
     });
@@ -102,7 +107,13 @@ public class MannequinMatchModule implements MatchModule, Listener {
   }
 
   public void modify(String id, Consumer<Mannequin> modifier) {
-    instances.get(id).forEach(modifier);
+    match.needModule(TaggedMobMatchModule.class).forEach(id, entity -> {
+      Mannequin mannequin = byEntity.get(entity.getUniqueId());
+
+      if (mannequin != null) {
+        modifier.accept(mannequin);
+      }
+    });
   }
 
   public void setWaypoint(Mannequin mannequin, @Nullable WaypointDefinition definition) {

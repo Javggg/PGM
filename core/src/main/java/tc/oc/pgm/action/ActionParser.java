@@ -20,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jdom2.Element;
 import org.jspecify.annotations.Nullable;
 import tc.oc.pgm.action.actions.ActionNode;
+import tc.oc.pgm.action.actions.AnimationAction;
 import tc.oc.pgm.action.actions.DropFlagAction;
 import tc.oc.pgm.action.actions.EnchantItemAction;
 import tc.oc.pgm.action.actions.ExposedAction;
@@ -50,6 +51,7 @@ import tc.oc.pgm.api.map.MapProtos;
 import tc.oc.pgm.api.map.factory.MapFactory;
 import tc.oc.pgm.api.party.Party;
 import tc.oc.pgm.api.player.MatchPlayer;
+import tc.oc.pgm.entity.MobAnimation;
 import tc.oc.pgm.features.FeatureDefinitionContext;
 import tc.oc.pgm.features.XMLFeatureReference;
 import tc.oc.pgm.filters.Filterable;
@@ -553,5 +555,13 @@ public class ActionParser {
     return MatchPlayer.class.isAssignableFrom(scope)
         ? new ScheduleAction.Player(after, (Action<? super MatchPlayer>) action)
         : new ScheduleAction<>(scope, after, action);
+  }
+
+  @MethodParser("animation")
+  public AnimationAction parseAnimation(Element el, Class<?> scope) throws InvalidXMLException {
+    var entityId = parser.string(el, "entity-id").required();
+    MobAnimation animation = parser.parseEnum(MobAnimation.class, el, "play").required();
+
+    return new AnimationAction(entityId, animation);
   }
 }

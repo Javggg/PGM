@@ -7,13 +7,14 @@ import org.jetbrains.annotations.Nullable;
 import tc.oc.pgm.action.Action;
 import tc.oc.pgm.api.feature.FeatureReference;
 import tc.oc.pgm.api.player.MatchPlayer;
+import tc.oc.pgm.entity.TaggedMob;
 import tc.oc.pgm.features.SelfIdentifyingFeatureDefinition;
 import tc.oc.pgm.platform.modern.modules.behavior.BehaviorDefinition;
 import tc.oc.pgm.platform.modern.modules.mannequin.SkinPart.SkinLayers;
 import tc.oc.pgm.platform.modern.modules.waypoint.WaypointDefinition;
 import tc.oc.pgm.util.skin.Skin;
 
-public class MannequinDefinition extends SelfIdentifyingFeatureDefinition {
+public class MannequinDefinition extends SelfIdentifyingFeatureDefinition implements TaggedMob {
   private final Component name;
   private final Component description;
   private final boolean playerProfile;
@@ -75,6 +76,11 @@ public class MannequinDefinition extends SelfIdentifyingFeatureDefinition {
     this.action = action;
     this.waypoint = waypoint;
     this.behavior = behavior;
+  }
+
+  @Override
+  public String getId() {
+    return super.getId();
   }
 
   public Component getName() {
