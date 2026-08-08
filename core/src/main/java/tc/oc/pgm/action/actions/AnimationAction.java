@@ -26,11 +26,11 @@ public class AnimationAction extends AbstractAction<Match> {
     match.needModule(TaggedMobMatchModule.class).forEach(entityId, le -> {
       MobAnimations.MOB_ANIMATIONS.play(le, animation);
 
-      if (animation == MobAnimation.START_DANCING) {
+      if (animation == MobAnimation.ALLAY_START_DANCING) {
         match
             .getExecutor(MatchScope.RUNNING)
             .schedule(
-                () -> MobAnimations.MOB_ANIMATIONS.play(le, MobAnimation.STOP_DANCING),
+                () -> MobAnimations.MOB_ANIMATIONS.play(le, MobAnimation.ALLAY_STOP_DANCING),
                 DEFAULT_DANCE_DURATION.toMillis(),
                 TimeUnit.MILLISECONDS);
       }
