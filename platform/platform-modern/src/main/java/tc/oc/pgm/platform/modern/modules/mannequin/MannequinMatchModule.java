@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 import org.bukkit.Location;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -38,16 +39,16 @@ public class MannequinMatchModule implements MatchModule, Listener {
     this.mannequinDefinitions = mannequinDefinitions;
   }
 
-  public void spawn(
+  public LivingEntity spawn(
       MannequinDefinition definition,
       double x,
       double y,
       double z,
-      float yaw,
       float pitch,
+      float yaw,
       @Nullable UUID uuidOverride,
       @Nullable Skin skinOverride) {
-    Location origin = new Location(match.getWorld(), x, y, z, yaw, pitch);
+    Location origin = new Location(match.getWorld(), x, y, z, pitch, yaw);
     Mannequin mannequin = Mannequin.spawn(origin, definition, uuidOverride, skinOverride);
     instances.put(definition.getId(), mannequin);
     byEntity.put(mannequin.getEntityId(), mannequin);
@@ -61,6 +62,8 @@ public class MannequinMatchModule implements MatchModule, Listener {
           .needModule(BehaviorMatchModule.class)
           .register(mannequin, definition.getBehavior().get());
     }
+
+    return mannequin.getEntity();
   }
 
   public void despawn(String id) {

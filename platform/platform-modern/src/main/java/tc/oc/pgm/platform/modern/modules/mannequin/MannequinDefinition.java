@@ -2,10 +2,13 @@ package tc.oc.pgm.platform.modern.modules.mannequin;
 
 import java.util.UUID;
 import net.kyori.adventure.text.Component;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.MainHand;
 import org.jetbrains.annotations.Nullable;
 import tc.oc.pgm.action.Action;
+import tc.oc.pgm.api.PGM;
 import tc.oc.pgm.api.feature.FeatureReference;
+import tc.oc.pgm.api.match.Match;
 import tc.oc.pgm.api.player.MatchPlayer;
 import tc.oc.pgm.entity.TaggedMob;
 import tc.oc.pgm.features.SelfIdentifyingFeatureDefinition;
@@ -157,5 +160,31 @@ public class MannequinDefinition extends SelfIdentifyingFeatureDefinition implem
 
   public @Nullable FeatureReference<BehaviorDefinition> getBehavior() {
     return behavior;
+  }
+
+  @Override
+  public LivingEntity spawn(
+      Match match,
+      double x,
+      double y,
+      double z,
+      float pitch,
+      float yaw,
+      @Nullable MatchPlayer trigger) {
+    UUID uuidOverride = null;
+    Skin skinOverride = null;
+
+    if (isPlayerProfile()) {
+      if (trigger == null) return null;
+      uuidOverride = trigger.getId();
+      if (uuidOverride == null) return null;
+
+      skinOverride = PGM.get().getDatastore().getSkin(uuidOverride);
+      if (skinOverride == null) return null;
+    }
+
+    return match
+        .needModule(MannequinMatchModule.class)
+        .spawn(this, x, y, z, pitch, yaw, uuidOverride, skinOverride);
   }
 }

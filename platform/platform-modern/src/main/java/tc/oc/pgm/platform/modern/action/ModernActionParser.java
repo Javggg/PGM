@@ -11,7 +11,6 @@ import tc.oc.pgm.api.map.factory.MapFactory;
 import tc.oc.pgm.api.player.MatchPlayer;
 import tc.oc.pgm.filters.Filterable;
 import tc.oc.pgm.platform.modern.action.actions.ModifyMannequinAction;
-import tc.oc.pgm.platform.modern.action.actions.SpawnMannequinAction;
 import tc.oc.pgm.platform.modern.modules.behavior.BehaviorDefinition;
 import tc.oc.pgm.platform.modern.modules.mannequin.MannequinDefinition;
 import tc.oc.pgm.platform.modern.modules.mannequin.MannequinPose;
@@ -28,21 +27,6 @@ public class ModernActionParser extends ActionParser {
 
   public ModernActionParser(MapFactory factory) {
     super(factory);
-  }
-
-  @MethodParser("spawn-mannequin")
-  public <B extends Filterable<?>> SpawnMannequinAction<B> parseSpawnMannequin(
-      Element el, Class<B> scope) throws InvalidXMLException {
-    scope = parseScope(el, scope);
-    var mannequin = parser.reference(MannequinDefinition.class, el, "mannequin").required();
-    var xformula = parser.formula(scope, el, "x").required();
-    var yformula = parser.formula(scope, el, "y").required();
-    var zformula = parser.formula(scope, el, "z").required();
-    var yawFormula = parser.formula(scope, el, "yaw").optional();
-    var pitchFormula = parser.formula(scope, el, "pitch").optional();
-
-    return new SpawnMannequinAction<>(
-        scope, mannequin, xformula, yformula, zformula, yawFormula, pitchFormula);
   }
 
   @MethodParser("modify-mannequin")

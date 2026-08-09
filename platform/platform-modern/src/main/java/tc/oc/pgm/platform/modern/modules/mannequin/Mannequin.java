@@ -182,16 +182,16 @@ public class Mannequin {
     this.action = action;
   }
 
-  public void teleport(double x, double y, double z, float yaw, float pitch) {
-    entity.teleport(new Location(entity.getWorld(), x, y, z, yaw, pitch));
-  }
-
-  public float getYaw() {
-    return entity.getLocation().getYaw();
+  public void teleport(double x, double y, double z, float pitch, float yaw) {
+    entity.teleport(new Location(entity.getWorld(), x, y, z, pitch, yaw));
   }
 
   public float getPitch() {
     return entity.getLocation().getPitch();
+  }
+
+  public float getYaw() {
+    return entity.getLocation().getYaw();
   }
 
   public void despawn() {
