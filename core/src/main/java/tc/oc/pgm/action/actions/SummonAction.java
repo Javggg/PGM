@@ -2,12 +2,15 @@ package tc.oc.pgm.action.actions;
 
 import java.util.Optional;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.jspecify.annotations.Nullable;
 import tc.oc.pgm.api.feature.FeatureReference;
 import tc.oc.pgm.api.match.Match;
 import tc.oc.pgm.api.player.MatchPlayer;
 import tc.oc.pgm.entity.SpawnableEntity;
 import tc.oc.pgm.entity.TaggedMob;
+import tc.oc.pgm.entity.TaggedMobMatchModule;
 import tc.oc.pgm.filters.Filterable;
 import tc.oc.pgm.util.math.Formula;
 
@@ -56,7 +59,12 @@ public class SummonAction<B extends Filterable<?>> extends AbstractAction<B> {
     }
 
     if (mob != null) {
-      mob.spawn(new Location(match.getWorld(), x, y, z, pitch, yaw));
+      Entity spawned = mob.spawn(new Location(match.getWorld(), x, y, z, pitch, yaw));
+
+      if (mob.id() != null && spawned instanceof LivingEntity le) {
+        match.needModule(TaggedMobMatchModule.class).track(mob.id(), le);
+      }
+      return;
     }
   }
 }
